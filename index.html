@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="theme-color" content="#171923">
+
+  <title>JustOne</title>
+
+  <style>
+
+    :root {
+
+      --page: #171923;
+
+      --panel: #222633;
+
+      --panel2: #2c3242;
+
+      --text: #f5f6fa;
+
+      --muted: #a6adbb;
+
+      --accent: #7c9cff;
+
+      --accent2: #587de8;
+
+      --green: #3dbb87;
+
+      --border: #3b4355;
+
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+
+      margin: 0;
+
+      min-height: 100vh;
+
+      background: var(--page);
+
+      color: var(--text);
+
+      font-family: Arial, sans-serif;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      padding: 20px;
+
+    }
+
+    button, input { font: inherit; }
+
+    button {
+
+      border: 0;
+
+      cursor: pointer;
+
+      border-radius: 12px;
+
+      padding: 13px 18px;
+
+      color: white;
+
+      background: var(--accent2);
+
+      font-weight: 700;
+
+      transition: *background* .15s, transform .1s;
+
+      touch-action: manipulation;
+
+    }
+
+    button:hover { background: var(--accent); }
+
+    button:active { transform: scale(.98); }
+
+    button:disabled {
+
+      opacity: .4;
+
+      cursor: not-allowed;
+
+    }
+
+    .app {
+
+      width: 100%;
+
+      max-width: 650px;
+
+      text-align: center;
+
+    }
+
+    .screen { display: none; }
+
+    .screen.active { display: block; }
+
+    h1 {
+
+      font-size: clamp(44px, 10vw, 72px);
+
+      margin: 0 0 12px;
+
+      letter-spacing: -3px;
+
+    }
+
+    h2 {
+
+      font-size: 25px;
+
+      margin: 0 0 20px;
+
+    }
+
+    .subtitle {
+
+      color: var(--muted);
+
+      font-size: 17px;
+
+      margin-bottom: 35px;
+
+    }
+
+    .primary {
+
+      width: 100%;
+
+      max-width: 320px;
+
+      padding: 18px;
+
+      font-size: 20px;
+
+    }
+
+    .secondary {
+
+      background: var(--panel2);
+
+      border: 1px solid var(--border);
+
+    }
+
+    .settings-toggle {
+
+      width: 100%;
+
+      margin: 0 0 6px;
+
+      background: var(--panel2);
+
+      border: 1px solid var(--border);
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+    }
+
+    .settings {
+
+      background: var(--panel);
+
+      border: 1px solid var(--border);
+
+      border-radius: 16px;
+
+      padding: 18px;
+
+      margin-bottom: 22px;
+
+      text-align: left;
+
+    }
+
+    .settings.hidden { display: none; }
+
+    .settings h3 {
+
+      margin: 0 0 15px;
+
+      font-size: 17px;
+
+    }
+
+    .delay-row {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 12px;
+
+    }
+
+    .delay-label {
+
+      color: var(--muted);
+
+      font-size: 15px;
+
+    }
+
+    .delay-controls {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+    }
+
+    .delay-controls button {
+
+      width: 42px;
+
+      height: 42px;
+
+      padding: 0;
+
+      font-size: 23px;
+
+      background: var(--panel2);
+
+      border: 1px solid var(--border);
+
+    }
+
+    #delayInput {
+
+      width: 65px;
+
+      height: 42px;
+
+      text-align: center;
+
+      color: white;
+
+      background: var(--page);
+
+      border: 1px solid var(--border);
+
+      border-radius: 9px;
+
+      font-size: 18px;
+
+      font-weight: bold;
+
+    }
+
+    .category-actions {
+
+      display: flex;
+
+      gap: 8px;
+
+      margin-bottom: 13px;
+
+    }
+
+    .category-actions button {
+
+      flex: 1;
+
+      font-size: 13px;
+
+      padding: 10px;
+
+    }
+
+    .categories {
+
+      display: grid;
+
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      gap: 9px;
+
+    }
+
+    .category {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+
+      padding: 11px;
+
+      border-radius: 9px;
+
+      background: var(--panel2);
+
+      color: var(--text);
+
+      font-size: 14px;
+
+      cursor: pointer;
+
+    }
+
+    .category input {
+
+      width: 17px;
+
+      height: 17px;
+
+      accent-color: var(--accent);
+
+    }
+
+    .word-area {
+
+      background: var(--panel);
+
+      border: 1px solid var(--border);
+
+      border-radius: 18px;
+
+      padding: 20px;
+
+      margin: 6px 0 20px;
+
+    }
+
+    .word-instruction {
+
+      color: var(--muted);
+
+      margin: 0 0 17px;
+
+      font-size: 15px;
+
+    }
+
+    .choices {
+
+      display: grid;
+
+      grid-template-columns: 1fr;
+
+      gap: 11px;
+
+    }
+
+    .choices.hidden { display: none; }
+
+    .word-choice {
+
+      min-height: 62px;
+
+      width: 100%;
+
+      padding: 15px;
+
+      background: var(--panel2);
+
+      border: 2px solid var(--border);
+
+      font-size: 19px;
+
+      overflow-wrap: anywhere;
+
+    }
+
+    .word-choice:hover:not(:disabled) {
+
+      background: #39435c;
+
+      border-color: var(--accent);
+
+    }
+
+    .word-choice.selected {
+
+      background: #294c43;
+
+      border-color: var(--green);
+
+    }
+
+    .word-choice.dimmed { opacity: .35; }
+
+    .revealed {
+
+      display: none;
+
+      margin: 6px 0 20px;
+
+      padding: 30px 15px;
+
+      background: #294c43;
+
+      border: 2px solid var(--green);
+
+      border-radius: 18px;
+
+    }
+
+    .revealed.show { display: block; }
+
+    .revealed-label {
+
+      color: #b6e8d4;
+
+      font-size: 14px;
+
+      margin-bottom: 12px;
+
+      text-transform: uppercase;
+
+      letter-spacing: 2px;
+
+    }
+
+    .revealed-word {
+
+      font-size: clamp(30px, 8vw, 48px);
+
+      font-weight: 800;
+
+      overflow-wrap: anywhere;
+
+    }
+
+    .countdown {
+
+      color: var(--muted);
+
+      min-height: 24px;
+
+      margin-top: 14px;
+
+      font-size: 15px;
+
+    }
+
+    .actions {
+
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 10px;
+
+      margin-top: 18px;
+
+    }
+
+    .actions button { width: 100%; }
+
+    .actions.single { grid-template-columns: 1fr; }
+
+    .actions.single #rerollButton {
+      width: 100%;
+      max-width: 320px;
+      justify-self: center;
+    }
+
+    .hidden { display: none !important; }
+
+    .back-button {
+
+      margin-top: 20px;
+
+      background: transparent;
+
+      color: var(--muted);
+
+      border: 1px solid var(--border);
+
+    }
+
+    @media (max-width: 450px) {
+
+      body { padding: 14px; }
+
+      .settings { padding: 14px; }
+
+      .categories { grid-template-columns: 1fr 1fr; }
+
+      .delay-row {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <main class="app">
+
+    <section id="titleScreen" class="screen active">
+
+      <h1>JustOne</h1>
+
+      <p class="subtitle">One word. Five choices. Make it count.</p>
+
+      <button class="primary" id="startButton">Start Game</button>
+
+    </section>
+
+    <section id="gameScreen" class="screen">
+
+      <h2>Choose Your Word</h2>
+
+      <button class="settings-toggle" id="settingsToggle">
+
+        <span>Settings</span>
+
+        <span id="settingsArrow">▼</span>
+
+      </button>
+
+      <div class="settings hidden" id="settingsPanel">
+
+        <h3>Reveal Delay</h3>
+
+        <div class="delay-row">
+
+          <span class="delay-label">Seconds before revealing the word</span>
+
+          <div class="delay-controls">
+
+            <button id="delayMinus" aria-label="Decrease delay">−</button>
+
+            <input id="delayInput" type="number" min="0" max="30" step="1" value="3">
+
+            <button id="delayPlus" aria-label="Increase delay">+</button>
+
+          </div>
+
+        </div>
+
+        <div style="height: 22px"></div>
+
+        <h3>Word Categories</h3>
+
+        <div class="category-actions">
+
+          <button class="secondary" id="selectAll">Select All</button>
+
+          <button class="secondary" id="clearAll">Clear All</button>
+
+        </div>
+
+        <div class="categories" id="categories"></div>
+
+      </div>
+
+      <div class="word-area">
+
+        <p class="word-instruction" id="instruction">
+
+          Select one of the five words below.
+
+        </p>
+
+        <div class="choices" id="choices"></div>
+
+        <div class="countdown" id="countdown"></div>
+
+        <div class="revealed" id="revealed">
+
+          <div class="revealed-word" id="revealedWord"></div>
+
+        </div>
+
+      </div>
+
+      <div class="actions" id="actions">
+
+        <button id="rerollButton">Reroll Words</button>
+
+        <button id="nextButton" disabled>Next Round</button>
+
+      </div>
+
+      <button class="back-button" id="backButton">Back to Title</button>
+
+    </section>
+
+  </main>
+
+  <script>
+
+    const wordBank = {
+
+      Animals: [
+
+        "Elephant", "Penguin", "Kangaroo", "Dolphin", "Giraffe",
+
+        "Crocodile", "Butterfly", "Octopus", "Flamingo", "Hedgehog",
+
+        "Squirrel", "Turtle", "Peacock", "Gorilla", "Owl",
+
+        "Koala", "Leopard", "Raccoon", "Jellyfish", "Camel"
+
+      ],
+
+      Food: [
+
+        "Pizza", "Sushi", "Hamburger", "Pancakes", "Spaghetti",
+
+        "Avocado", "Chocolate", "Watermelon", "Tacos", "Popcorn",
+
+        "Cheesecake", "Dumplings", "Lasagna", "Pretzel", "Donut",
+
+        "Pineapple", "Ice Cream", "Burrito", "Croissant", "Waffles"
+
+      ],
+
+      Sports: [
+
+        "Basketball", "Soccer", "Tennis", "Baseball", "Golf",
+
+        "Swimming", "Volleyball", "Boxing", "Skiing", "Hockey",
+
+        "Surfing", "Bowling", "Wrestling", "Badminton", "Cycling",
+
+        "Gymnastics", "Rugby", "Archery", "Cricket", "Skateboarding"
+
+      ],
+
+      Geography: [
+
+        "Paris", "Tokyo", "Mount Everest", "Amazon River", "Sahara Desert",
+
+        "New York", "Antarctica", "Hawaii", "Grand Canyon", "London",
+
+        "Great Wall of China", "Venice", "Alaska", "Niagara Falls",
+
+        "Rome", "Sydney", "Madagascar", "Nile River", "Iceland", "Brazil"
+
+      ],
+
+      "Movies and TV": [
+
+        "Titanic", "Jurassic Park", "Star Wars", "The Simpsons",
+
+        "Harry Potter", "Finding Nemo", "Batman", "The Lion King",
+
+        "Friends", "Frozen", "Shrek", "Spider-Man", "The Office",
+
+        "Toy Story", "Jaws", "Stranger Things", "Avatar", "The Matrix",
+
+        "Cinderella", "Superman"
+
+      ],
+
+      Music: [
+
+        "Guitar", "Piano", "Drums", "Violin", "Karaoke",
+
+        "Rock Concert", "Jazz", "Opera", "Microphone", "Trumpet",
+
+        "Flute", "Cello", "DJ", "Saxophone", "Maracas",
+
+        "Music Festival", "Harmonica", "Choir", "Banjo", "Accordion"
+
+      ],
+
+      Technology: [
+
+        "Smartphone", "Laptop", "Robot", "Artificial Intelligence",
+
+        "Video Game", "Drone", "Virtual Reality", "Keyboard",
+
+        "Satellite", "Internet", "Camera", "Headphones", "Printer",
+
+        "Smartwatch", "Electric Car", "Television", "Bluetooth",
+
+        "Calculator", "Microchip", "Wi-Fi"
+
+      ],
+
+      Nature: [
+
+        "Rainbow", "Volcano", "Waterfall", "Thunderstorm", "Forest",
+
+        "Desert", "Ocean", "Glacier", "Earthquake", "Tornado",
+
+        "Sunflower", "Coral Reef", "Northern Lights", "Cactus",
+
+        "Mountain", "Cave", "Lightning", "Jungle", "Comet", "Eclipse"
+
+      ],
+
+      "Everyday Objects": [
+
+        "Toothbrush", "Umbrella", "Refrigerator", "Sunglasses",
+
+        "Backpack", "Scissors", "Mirror", "Pillow", "Flashlight",
+
+        "Alarm Clock", "Wallet", "Suitcase", "Remote Control",
+
+        "Vacuum Cleaner", "Toaster", "Bicycle", "Key", "Ladder",
+
+        "Coffee Mug", "Screwdriver"
+
+      ],
+
+      History: [
+
+        "Pyramids", "Colosseum", "Viking", "Cleopatra", "Napoleon",
+
+        "Renaissance", "World War II", "Ancient Greece", "Roman Empire",
+
+        "Industrial Revolution", "King Arthur", "Mona Lisa",
+
+        "Moon Landing", "Medieval Castle", "Titanic", "Spartacus",
+
+        "Wright Brothers", "Declaration of Independence", "Samurai",
+
+        "Great Fire of London"
+
+      ],
+
+      Science: [
+
+        "Gravity", "Black Hole", "Atom", "DNA", "Solar System",
+
+        "Dinosaur", "Evolution", "Telescope", "Volcano", "Magnet",
+
+        "Electricity", "Photosynthesis", "Fossil", "Planet",
+
+        "Experiment", "Microscope", "Rocket", "Neutron", "Ecosystem",
+
+        "Meteor"
+
+      ],
+
+      Transportation: [
+
+        "Airplane", "Submarine", "Helicopter", "Train", "Bicycle",
+
+        "Hot Air Balloon", "Motorcycle", "Spaceship", "Ferry",
+
+        "Tractor", "Ambulance", "Fire Truck", "Sailboat", "Taxi",
+
+        "Skateboard", "Canoe", "Cable Car", "Bulldozer", "Limousine",
+
+        "Rocket"
+
+      ],
+
+      Jobs: [
+
+        "Firefighter", "Astronaut", "Chef", "Detective", "Dentist",
+
+        "Pilot", "Teacher", "Photographer", "Magician", "Farmer",
+
+        "Architect", "Plumber", "Lifeguard", "Scientist", "Sculptor",
+
+        "Journalist", "Mechanic", "Veterinarian", "Judge", "Baker"
+
+      ],
+
+      School: [
+
+        "Homework", "Principal", "Recess", "Graduation", "Backpack",
+
+        "Science Fair", "Library", "Chalkboard", "Field Trip",
+
+        "Report Card", "School Bus", "Locker", "Yearbook",
+
+        "Prom", "Detention", "Pop Quiz", "Pencil", "Textbook",
+
+        "Diploma", "Cafeteria"
+
+      ],
+
+      "Board Games": [
+
+        "Monopoly", "Chess", "Scrabble", "Clue", "Risk",
+
+        "Catan", "Checkers", "Jenga", "Connect Four", "Life",
+
+        "Battleship", "Sorry!", "Dominoes", "Guess Who?",
+
+        "Candy Land", "Uno", "Ticket to Ride", "Boggle",
+
+        "Pictionary", "Trivial Pursuit"
+
+      ],
+
+      Fantasy: [
+
+        "Dragon", "Unicorn", "Mermaid", "Wizard", "Vampire",
+
+        "Werewolf", "Fairy", "Goblin", "Phoenix", "Elf",
+
+        "Giant", "Ghost", "Witch", "Troll", "Centaur",
+
+        "Genie", "Zombie", "Griffin", "Sphinx", "Cyclops"
+
+      ]
+
+    };
+
+    const $ = id => document.getElementById(id);
+
+    const titleScreen = $("titleScreen");
+
+    const gameScreen = $("gameScreen");
+
+    const categoriesElement = $("categories");
+
+    const choicesElement = $("choices");
+
+    const countdownElement = $("countdown");
+
+    const revealedElement = $("revealed");
+
+    const revealedWordElement = $("revealedWord");
+
+    const instructionElement = $("instruction");
+
+    const nextButton = $("nextButton");
+
+    const rerollButton = $("rerollButton");
+
+    const actionsElement = $("actions");
+
+    const delayInput = $("delayInput");
+
+    const settingsPanel = $("settingsPanel");
+
+    const settingsArrow = $("settingsArrow");
+
+    let delaySeconds = 0;
+
+    let currentWords = [];
+
+    let selectedWord = null;
+
+    let countdownTimer = null;
+
+    let previousWords = [];
+
+    function showScreen(screen) {
+
+      titleScreen.classList.remove("active");
+
+      gameScreen.classList.remove("active");
+
+      screen.classList.add("active");
+
+    }
+
+    function buildCategories() {
+
+      categoriesElement.innerHTML = "";
+
+      Object.keys(wordBank).forEach(category => {
+
+        const label = document.createElement("label");
+
+        label.className = "category";
+
+        const checkbox = document.createElement("input");
+
+        checkbox.type = "checkbox";
+
+        checkbox.value = category;
+
+        checkbox.checked = true;
+
+        const text = document.createElement("span");
+
+        text.textContent = category;
+
+        label.append(checkbox, text);
+
+        categoriesElement.appendChild(label);
+
+      });
+
+    }
+
+    function getSelectedCategories() {
+
+      return [...categoriesElement.querySelectorAll("input:checked")]
+
+        .map(input => input.value);
+
+    }
+
+    function setAllCategories(checked) {
+
+      categoriesElement.querySelectorAll("input").forEach(input => {
+
+        input.checked = checked;
+
+      });
+
+    }
+
+    function updateDelay(value) {
+
+      let parsed = Number.parseInt(value, 10);
+
+      if (!Number.isFinite(parsed)) parsed = 0;
+
+      delaySeconds = Math.max(0, Math.min(30, parsed));
+
+      delayInput.value = delaySeconds;
+
+    }
+
+    function changeDelay(amount) {
+
+      updateDelay(delaySeconds + amount);
+
+    }
+
+    function addHoldBehavior(button, amount) {
+
+      let holdTimeout = null;
+
+      let repeatInterval = null;
+
+      let pointerActive = false;
+
+      let held = false;
+
+      button.addEventListener("pointerdown", event => {
+
+        if (event.button !== undefined && event.button !== 0) return;
+
+        pointerActive = true;
+
+        held = false;
+
+        clearTimeout(holdTimeout);
+
+        clearInterval(repeatInterval);
+
+        try {
+
+          button.setPointerCapture(event.pointerId);
+
+        } catch (_) {}
+
+        holdTimeout = setTimeout(() => {
+
+          if (!pointerActive) return;
+
+          held = true;
+
+          changeDelay(amount);
+
+          repeatInterval = setInterval(() => {
+
+            changeDelay(amount);
+
+          }, 180);
+
+        }, 400);
+
+      });
+
+      function finishPointer() {
+
+        if (!pointerActive) return;
+
+        pointerActive = false;
+
+        clearTimeout(holdTimeout);
+
+        clearInterval(repeatInterval);
+
+        if (!held) changeDelay(amount);
+
+      }
+
+      button.addEventListener("pointerup", finishPointer);
+
+      button.addEventListener("pointercancel", finishPointer);
+
+      button.addEventListener("lostpointercapture", finishPointer);
+
+      button.addEventListener("click", event => {
+
+        event.preventDefault();
+
+      });
+
+    }
+
+    function shuffle(array) {
+
+      const result = [...array];
+
+      for (let i = result.length - 1; i > 0; i--) {
+
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [result[i], result[j]] = [result[j], result[i]];
+
+      }
+
+      return result;
+
+    }
+
+    function getAvailableWords() {
+
+      const selectedCategories = getSelectedCategories();
+
+      const words = [];
+
+      selectedCategories.forEach(category => {
+
+        wordBank[category].forEach(word => {
+
+          words.push({ word, category });
+
+        });
+
+      });
+
+      return words;
+
+    }
+
+    function drawWords() {
+
+      const available = getAvailableWords();
+
+      if (available.length < 5) {
+
+        alert("Please select enough categories to provide at least five words.");
+
+        return;
+
+      }
+
+      const fresh = available.filter(item =>
+
+        !previousWords.includes(item.word)
+
+      );
+
+      const pool = fresh.length >= 5 ? fresh : available;
+
+      currentWords = shuffle(pool).slice(0, 5);
+
+      selectedWord = null;
+
+      clearInterval(countdownTimer);
+
+      choicesElement.classList.remove("hidden");
+
+      revealedElement.classList.remove("show");
+
+      rerollButton.classList.remove("hidden");
+
+      nextButton.classList.add("hidden");
+
+      nextButton.disabled = true;
+
+      actionsElement.classList.add("single");
+
+      countdownElement.textContent = "";
+
+      instructionElement.textContent = "Select one of the five words below.";
+
+      renderChoices();
+
+    }
+
+    function renderChoices() {
+
+      choicesElement.innerHTML = "";
+
+      currentWords.forEach(item => {
+
+        const button = document.createElement("button");
+
+        button.className = "word-choice";
+
+        button.textContent = item.word;
+
+        button.addEventListener("click", () => {
+
+          if (selectedWord) return;
+
+          selectWord(item, button);
+
+        });
+
+        choicesElement.appendChild(button);
+
+      });
+
+    }
+
+    function selectWord(item, selectedButton) {
+
+      selectedWord = item;
+
+      [...choicesElement.children].forEach(button => {
+
+        button.disabled = true;
+
+        if (button === selectedButton) {
+
+          button.classList.add("selected");
+
+        } else {
+
+          button.classList.add("dimmed");
+
+        }
+
+      });
+
+      // Hide reroll as soon as a word is selected.
+
+      rerollButton.classList.add("hidden");
+
+      instructionElement.textContent = "Your word is being revealed...";
+
+      startCountdown(item);
+
+    }
+
+    function startCountdown(item) {
+
+      let remaining = delaySeconds;
+
+      if (remaining <= 0) {
+
+        revealWord(item);
+
+        return;
+
+      }
+
+      countdownElement.textContent = `Revealing in ${remaining}...`;
+
+      countdownTimer = setInterval(() => {
+
+        remaining--;
+
+        if (remaining <= 0) {
+
+          clearInterval(countdownTimer);
+
+          revealWord(item);
+
+        } else {
+
+          countdownElement.textContent = `Revealing in ${remaining}...`;
+
+        }
+
+      }, 1000);
+
+    }
+
+    function revealWord(item) {
+
+      revealedWordElement.textContent = item.word;
+
+      revealedElement.classList.add("show");
+
+      // Hide the entire list of five choices after reveal.
+
+      choicesElement.classList.add("hidden");
+
+      countdownElement.textContent = "";
+
+      instructionElement.textContent = "";
+
+      previousWords.push(item.word);
+
+      if (previousWords.length > 20) {
+
+        previousWords.shift();
+
+      }
+
+      // Show Next Round only after the word is revealed.
+
+      nextButton.disabled = false;
+
+      nextButton.classList.remove("hidden");
+
+      actionsElement.classList.add("single");
+
+    }
+
+    $("startButton").addEventListener("click", () => {
+
+      showScreen(gameScreen);
+
+      drawWords();
+
+    });
+
+    $("backButton").addEventListener("click", () => {
+
+      clearInterval(countdownTimer);
+
+      showScreen(titleScreen);
+
+    });
+
+    rerollButton.addEventListener("click", drawWords);
+
+    nextButton.addEventListener("click", drawWords);
+
+    $("selectAll").addEventListener("click", () => {
+
+      setAllCategories(true);
+
+    });
+
+    $("clearAll").addEventListener("click", () => {
+
+      setAllCategories(false);
+
+    });
+
+    $("settingsToggle").addEventListener("click", () => {
+
+      const isHidden = settingsPanel.classList.toggle("hidden");
+
+      settingsArrow.textContent = isHidden ? "▼" : "▲";
+
+    });
+
+    delayInput.addEventListener("change", () => {
+
+      updateDelay(delayInput.value);
+
+    });
+
+    delayInput.addEventListener("input", () => {
+
+      const value = delayInput.value;
+
+      if (value !== "" && Number.isFinite(Number(value))) {
+
+        delaySeconds = Math.max(0, Math.min(30, Math.floor(Number(value))));
+
+      }
+
+    });
+
+    addHoldBehavior($("delayMinus"), -1);
+
+    addHoldBehavior($("delayPlus"), 1);
+
+    buildCategories();
+
+  </script>
+
+</body>
+
+</html>
